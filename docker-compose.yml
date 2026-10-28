@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bancodigital
+      POSTGRES_USER: banco
+      POSTGRES_PASSWORD: banco
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/bancodigital
+      DB_USER: banco
+      DB_PASSWORD: banco
+      DB_DRIVER: org.postgresql.Driver
+      JWT_SECRET: troque-esta-chave-em-producao-por-algo-bem-grande-e-aleatorio-1234567890
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
